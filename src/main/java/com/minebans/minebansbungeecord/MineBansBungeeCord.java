@@ -21,6 +21,7 @@ public class MineBansBungeeCord extends Plugin {
 	
 	protected APIRequestProxy requestProxy;
 	
+	@Override
 	public void onEnable(){
 		this.proxy = ProxyServer.getInstance();
 		this.log = this.proxy.getLogger();
@@ -80,6 +81,7 @@ public class MineBansBungeeCord extends Plugin {
 		this.proxy.getPluginManager().registerListener(this, new ConnectionListener(this));
 	}
 	
+	@Override
 	public void onDisable(){
 		this.requestProxy.stopThread();
 	}

@@ -18,6 +18,7 @@ import java.util.logging.Level;
 public class APIRequestProxy extends Thread {
 	
 	private MineBansBungeeCord plugin;
+	private String authStr;
 	
 	private ServerSocket socket;
 	private volatile APIRequest currentRequest;
@@ -26,6 +27,7 @@ public class APIRequestProxy extends Thread {
 		super("MineBans API Server Thread");
 		
 		this.plugin = plugin;
+		this.authStr = plugin.config.getProperty("auth-str", "CHANGE_ME");
 		
 		this.socket = new ServerSocket();
 		this.socket.bind(new InetSocketAddress(address, port));
@@ -52,11 +54,12 @@ public class APIRequestProxy extends Thread {
 				BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				DataOutputStream output = new DataOutputStream(socket.getOutputStream());
 				
+				String authStr = input.readLine();
 				String url = input.readLine();
 				String data = input.readLine();
 				String motd = input.readLine();
 				
-				if (url != null && data != null && motd != null){
+				if (authStr != null && url != null && data != null && motd != null && authStr.equals(this.authStr)){
 					this.currentRequest = new APIRequest(url, motd, data);
 					
 					URLConnection conn = (new URL(url)).openConnection();
