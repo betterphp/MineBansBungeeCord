@@ -1,5 +1,9 @@
 package com.minebans.minebansbungeecord;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,12 +16,42 @@ public class MineBansBungeeCord extends Plugin {
 	
 	protected ProxyServer proxy;
 	protected Logger log;
+	protected File dataDir;
+	protected Properties config;
 	
-	protected APIRequestHandler requestHandler;
+	protected APIRequestProxy requestProxy;
 	
 	public void onEnable(){
 		this.proxy = ProxyServer.getInstance();
 		this.log = this.proxy.getLogger();
+		this.dataDir = this.getDataFolder();
+		this.config = new Properties();
+		
+		if (!this.dataDir.exists()){
+			this.dataDir.mkdirs();
+		}
+		
+		File configFile = new File(this.dataDir, "config.txt");
+		
+		if (!configFile.exists()){
+			this.config.put("auth-str", "CHANGE_THIS");
+			this.config.put("listen-address", "127.0.0.1");
+			this.config.put("listen-port", "8000");
+			
+			try{
+				this.config.store(new FileOutputStream(configFile), null);
+			}catch (Exception e){
+				this.log.warning("Failed to save default config");
+				e.printStackTrace();
+			}
+		}else{
+			try{
+				this.config.load(new FileInputStream(configFile));
+			}catch (Exception e){
+				this.log.warning("Failed to load config");
+				e.printStackTrace();
+			}
+		}
 		
 		if (DEBUG_MODE){
 			this.log.log(Level.WARNING, "========================= WARNING ==========================");
@@ -32,15 +66,22 @@ public class MineBansBungeeCord extends Plugin {
 			return;
 		}
 		
-		this.proxy.registerChannel("MineBansBungee");
-		this.proxy.getPluginManager().registerListener(new ConnectionListener(this));
+		try{
+			String address = this.config.getProperty("listen-address", "127.0.0.1");
+			int port = Integer.parseInt(this.config.getProperty("listen-port", "8000"));
+			
+			this.requestProxy = new APIRequestProxy(this, address, port);
+			this.requestProxy.start();
+		}catch (Exception e){
+			this.log.severe("Failed to start request proxy on");
+			e.printStackTrace();
+		}
 		
-		this.requestHandler = new APIRequestHandler(this);
-		this.requestHandler.start();
+		this.proxy.getPluginManager().registerListener(this, new ConnectionListener(this));
 	}
 	
 	public void onDisable(){
-		this.requestHandler.interrupt();
+		this.requestProxy.stopThread();
 	}
 	
 }
