@@ -25,7 +25,7 @@ public class MineBansBungeeCord extends Plugin {
 	public void onEnable(){
 		this.proxy = ProxyServer.getInstance();
 		this.log = this.proxy.getLogger();
-		this.dataDir = this.getDataFolder();
+		this.dataDir = new File("plugins" + File.separator + this.getDescription().getName());
 		this.config = new Properties();
 		
 		if (!this.dataDir.exists()){
