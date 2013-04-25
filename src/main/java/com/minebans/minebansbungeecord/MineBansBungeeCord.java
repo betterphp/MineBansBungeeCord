@@ -12,7 +12,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 
 public class MineBansBungeeCord extends Plugin {
 	
-	public static final boolean DEBUG_MODE = true;
+	public static final boolean DEBUG_MODE = false;
 	
 	protected ProxyServer proxy;
 	protected Logger log;
