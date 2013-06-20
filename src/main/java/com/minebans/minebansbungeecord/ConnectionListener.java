@@ -5,8 +5,7 @@ import java.net.InetAddress;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
-
-import com.google.common.eventbus.Subscribe;
+import net.md_5.bungee.event.EventHandler;
 
 public class ConnectionListener implements Listener {
 	
@@ -16,7 +15,7 @@ public class ConnectionListener implements Listener {
 		this.plugin = plugin;
 	}
 	
-	@Subscribe
+	@EventHandler
 	public void onProxyPing(ProxyPingEvent event){
 		try{
 			InetAddress address = event.getConnection().getAddress().getAddress();
