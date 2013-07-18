@@ -22,7 +22,9 @@ public class ConnectionListener implements Listener {
 			ServerPing ping = event.getResponse();
 			
 			if ((!address.isAnyLocalAddress() && address.getHostAddress().equals(InetAddress.getByName("minebans.com").getHostAddress())) || MineBansBungeeCord.DEBUG_MODE){
-				event.setResponse(new ServerPing(ping.getProtocolVersion(), ping.getGameVersion(), plugin.requestProxy.getCurrentRequest().getMOTD(), ping.getCurrentPlayers(), ping.getMaxPlayers()));
+				if (plugin.requestProxy.getCurrentRequest() != null){
+					event.setResponse(new ServerPing(ping.getProtocolVersion(), ping.getGameVersion(), plugin.requestProxy.getCurrentRequest().getMOTD(), ping.getCurrentPlayers(), ping.getMaxPlayers()));
+				}
 			}
 		}catch (Exception e){
 			e.printStackTrace();
