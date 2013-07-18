@@ -35,6 +35,7 @@ public class MineBansBungeeCord extends Plugin {
 		File configFile = new File(this.dataDir, "config.txt");
 		
 		if (!configFile.exists()){
+			this.config.put("api-key", "CHANGE_THIS");
 			this.config.put("auth-str", "CHANGE_THIS");
 			this.config.put("listen-address", "127.0.0.1");
 			this.config.put("listen-port", "8000");

@@ -19,15 +19,17 @@ public class APIRequestProxy extends Thread {
 	
 	private MineBansBungeeCord plugin;
 	private String authStr;
+	protected String apiKey;
 	
 	private ServerSocket socket;
-	private volatile APIRequest currentRequest;
+	protected volatile APIRequest currentRequest;
 	
 	public APIRequestProxy(MineBansBungeeCord plugin, String address, int port) throws IOException {
 		super("MineBans API Server Thread");
 		
 		this.plugin = plugin;
 		this.authStr = plugin.config.getProperty("auth-str", "CHANGE_ME");
+		this.apiKey = plugin.config.getProperty("api-key", "CHANGE_ME");
 		
 		this.socket = new ServerSocket();
 		this.socket.bind(new InetSocketAddress(address, port));
@@ -127,10 +129,6 @@ public class APIRequestProxy extends Thread {
 				}
 			}
 		}
-	}
-	
-	public APIRequest getCurrentRequest(){
-		return this.currentRequest;
 	}
 	
 }
